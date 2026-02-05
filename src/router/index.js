@@ -36,7 +36,7 @@ const router=createRouter({
             meta:{KeepAlive:true}//打上需要缓存的标签，作用是如果到了这个页面直接从内存中拿组件，不必重新渲染，与<keeo-alive>连用
         },
         {
-            path:'/newsdetail',
+            path:'/news/：id',//进入此页时带上id
             component:NewsDetail,
              meta: { keepAlive: false }
         },
