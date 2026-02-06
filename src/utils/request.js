@@ -1,6 +1,7 @@
 import axios from 'axios'//引入axios库,用来像后端发送与接受请求
 import { ElMessage } from 'element-plus'
 import router from '@/router'
+
 const service =axios.create(
     {
         baseURL: import.meta.env.VITE_BASE_API,//设置基础路径,使得之后不需要大量写,import.meta是vite提供的基础元信息，env是环境变量
