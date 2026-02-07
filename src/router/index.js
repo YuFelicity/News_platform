@@ -5,79 +5,82 @@ import { KeepAlive } from 'vue'
 import NotFound from '@/view/NotFound.vue'
 
 //懒加载，用来减少每次加载页面都要重新导入的开销，只在真正使用的时候加载js代码
-// const Login=()=>import('@/view/login/index.vue')
-// const Register=()=>import('@/view/register/index.vue')
-// const Home = () => import('@/view/Home/index.vue')
-// const NewsDetail = () => import('@/view/NewsDetail/index.vue')
-// const UserCenter = () => import('@/view/UserCenter/index.vue')
-// const Profile = () => import('@/view/UserCenter/Profile/index.vue')
-// const Favorite = () => import('@/view/UserCenter/Favorite/index.vue')
-// const History = () => import('@/view/UserCenter/History/index.vue')
-// const NotFound = () => import('@/view/NotFound/index.vue')
+const Login=()=>import('@/view/login/index.vue')
+const Register=()=>import('@/view/register/index.vue')
+const Home = () => import('@/view/Home/index.vue')
+const NewsDetail = () => import('@/view/NewsDetail/index.vue')
+const UserCenter = () => import('@/view/UserCenter/index.vue')
+const Profile = () => import('@/view/UserCenter/Profile/index.vue')
+const Favorite = () => import('@/view/UserCenter/Favorite/index.vue')
+const History = () => import('@/view/UserCenter/History/index.vue')
+const NotFound = () => import('@/view/NotFound/index.vue')
 //创建路由实例
 const router=createRouter({
     history:createWebHistory(),
     routes:[
    
-        // {
-        //     path:'/',
-        //     redirect:'/home'//路由重定向，用于首页当访问'/'时候，自动跳转到'/hoe'
-        // },
-        // {
-        //     path:'/login',
-        //     component:Login,//当访问'/login'时，渲染login组件，
-        //     meta:{requireAuth:false}//路由元信息，通过meta附加的信息，与路由守卫连用,这一步写的是是否需要登录才能访问
+        {
+            path:'/',
+            redirect:'/home'//路由重定向，用于首页当访问'/'时候，自动跳转到'/hoe'
+        },
+        {
+            path:'/login',
+            component:Login,//当访问'/login'时，渲染login组件，
+            meta:{requireAuth:false}//路由元信息，通过meta附加的信息，与路由守卫连用,这一步写的是是否需要登录才能访问
 
-        // },
-        // {
-        //     path:'/register',
-        //     component:Register,
-        //     meta:{requireAuth:false}
-        // },
-        // {
-        //     path:'/home',
-        //     component:Home,
-        //     meta:{KeepAlive:true}//打上需要缓存的标签，作用是如果到了这个页面直接从内存中拿组件，不必重新渲染，与<keeo-alive>连用
-        // },
-                    {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: () => import('@/view/NotFound.vue')
-  }
-        // {
-        //     path:'/news/：id',//进入此页时带上id
-        //     component:NewsDetail,
-        //      meta: { keepAlive: false }
-        // },
-        // {
-        //     path:'/user',
-        //     component:UserCenter,
-        //     meta: { requiresAuth: true },
-        //     redirect: '/user/profile',
-        //         children: [
-        // {
-        //   path: 'profile',
-        //   component: Profile,
-        //   meta: { keepAlive: true }
-        // },
-        // {
-        //   path: 'favorite',
-        //   component: Favorite,
-        //   meta: { keepAlive: true }
-        // },
-        // {
-        //   path: 'history',
-        //   component: History,
-        //   meta: { keepAlive: true }
-        // }
-      ]//子路由
-        // },
-        // {
-        //     path:'/notfound',
-        //     component:NotFound
-        // }
+        },
+        {
+            path:'/register',
+            component:Register,
+            meta:{requireAuth:false}
+        },
+        {
+            path:'/home',
+            component:Home,
+            meta:{KeepAlive:true}//打上需要缓存的标签，作用是如果到了这个页面直接从内存中拿组件，不必重新渲染，与<keeo-alive>连用
+        },
+//                     {
+//     path: '/:pathMatch(.*)*',
+//     name: 'NotFound',
+//     component: () => import('@/view/NotFound.vue')
+//   }
+        {
+            path:'/news/:id',//进入此页时带上id
+            component:NewsDetail,
+             meta: { keepAlive: false }
+        },
+        {
+            path:'/user',
+            component:UserCenter,
+            meta: { requiresAuth: true },
+            redirect: '/user/profile',
+            //子路由
+             children: [
+        {
+          path: 'profile',
+          component: Profile,
+          meta: { keepAlive: true }
+        },
+        {
+          path: 'favorite',
+          component: Favorite,
+          meta: { keepAlive: true }
+        },
+        {
+          path: 'history',
+          component: History,
+          meta: { keepAlive: true }
+        },
+     
+        
+        {
+            path:'/notfound',
+            component:NotFound
+        }]}
+    ]
+
    
-    
+                
 
 })
 //全局前置路由守卫，用于检查是否登录过

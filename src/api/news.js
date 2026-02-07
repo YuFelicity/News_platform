@@ -7,3 +7,7 @@ export function getCategoryList(){
 export function getNewsList(params){
     return request.get('/news/list',params)
 }//params是传给后端的查询参数，将参数拼接到查询字符串上
+//新闻详情
+export function getNewsDetail(id){
+    return request.get('news/detail/${id}')
+}

@@ -23,10 +23,4 @@ return {
   setUserInfo,
   logout
 }
-
-
-
-    
-
-
 })
