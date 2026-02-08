@@ -1,7 +1,7 @@
 <template>
     <div class='home'>
       <el-menu mode="horizontal" :default-active="activeCategory">//设置导航栏模式为横向,动态绑定激活的菜单项
-        //使用v-for渲染导航栏,再点击的时候调用函数
+        <!--使用v-for渲染导航栏,再点击的时候调用函数-->
         <el-menu-item 
         v-for="item in categories" 
         :key="item.id"
@@ -11,13 +11,13 @@
         {{item.name}}
         </el-menu-item>
       </el-menu>
-      //新闻列表
-      //使用v-for渲染,点击卡片时跳转到对应的详情页，卡片中展示新闻的标题，概述，发布时间
+      <!--新闻列表
+      //使用v-for渲染,点击卡片时跳转到对应的详情页，卡片中展示新闻的标题，概述，发布时间-->
       <el-card 
       v-for="news in newsList"
       :key="news.id"
       class="news-card"
-      @click="goDeatail(news.id)"
+      @click="goDetail(news.id)"
       > 
       <h3>{{news.title}}</h3>
        <p>{{ news.summary }}</p>
@@ -25,7 +25,7 @@
       </el-card>
       //分页
       <el-pagination 
-       v-model:crrent-page="page"
+       v-model:current-page="page"
        v-model:page-size="pageSize"
       :total="total"
       @current-change="loadlist"
@@ -43,8 +43,8 @@
     const categories=ref([])//动态绑定导航栏，初始为数组
     const newsList=ref([])//动态绑定新闻列表
     const activeCategory=ref('')//动态绑定高亮的值
-    const page=reg(1)
-    const pageSize=reg(10)
+    const page=ref(1)
+    const pageSize=ref(10)
     const total=ref(0)
     const router=useRouter()//创建router实例
     const loadCategory=async ()=>{//加载导航栏，使用异步，只有当从后端获取到数据时才会传入
