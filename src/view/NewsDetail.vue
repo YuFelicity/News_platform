@@ -1,8 +1,8 @@
 <template>
 <div class="news-deteil"> 
-    <h2>{{detail.title}}</h2>//新闻标题，插值表达式用于动态渲染
+    <h2>{{detail.title}}</h2><!--新闻标题，插值表达式用于动态渲染-->
     <p class="publishtime">发布时间：{{detail.publishtime}}</p>
-   <div class="content" v-html="detail.content"></div>//新闻内容
+   <div class="content" v-html="detail.content"></div><!--新闻内容-->
 </div>
   
 </template>
