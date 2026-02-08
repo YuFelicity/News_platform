@@ -13,17 +13,11 @@
       </el-menu>
       <!--新闻列表
       //使用v-for渲染,点击卡片时跳转到对应的详情页，卡片中展示新闻的标题，概述，发布时间-->
-      <el-card 
-      v-for="news in newsList"
-      :key="news.id"
-      class="news-card"
-      @click="goDetail(news.id)"
-      > 
-      <h3>{{news.title}}</h3>
-       <p>{{ news.summary }}</p>
-      <span>{{ news.publishTime }}</span>
-      </el-card>
-      //分页
+     <News 
+       v-for="news in newsList"
+       :key="news.id"
+       :news="news"/>
+      <!--//分页-->
       <el-pagination 
        v-model:current-page="page"
        v-model:page-size="pageSize"
@@ -40,6 +34,7 @@
     import {ref,onMounted} from 'vue'
     import {getCategoryList,getNewsList} from '@/api/news'
     import {useRouter} from 'vue-router'
+    import News from '@/components/News.vue'
     const categories=ref([])//动态绑定导航栏，初始为数组
     const newsList=ref([])//动态绑定新闻列表
     const activeCategory=ref('')//动态绑定高亮的值
@@ -66,9 +61,9 @@ const changeCategory = (id) => {//在改变分类时高亮的值改变，重置�
   loadList()
 }
 
-const goDetail = (id) => {//根据传过来的id使用router实例挂上参数
-  router.push(`/news/${id}`)
-}
+// const goDetail = (id) => {//根据传过来的id使用router实例挂上参数
+//   router.push(`/news/${id}`)
+// }
 
 onMounted(() => {
   loadCategory()
