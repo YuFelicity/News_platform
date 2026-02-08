@@ -45,7 +45,7 @@ const router=createRouter({
 //     component: () => import('@/view/NotFound.vue')
 //   }
         {
-            path:'/news/:id',//进入此页时带上id
+            path:'/newsDetail/:id',//进入此页时带上id
             component:NewsDetail,
              meta: { keepAlive: false }
         },
