@@ -22,6 +22,7 @@ async def increase_news_views(db: AsyncSession,category_id: int):
     t = update(News).where(News.category_id == category_id).values(views=News.views + 1)
     result = await db.execute(t)
     await db.commit()
+    return result.rowcount > 0 #检查是否命中数据 命中返回True
 
 async def get_news_detail(db: AsyncSession, news_id: int):
     t = select(News).where(News.id == news_id)
