@@ -24,3 +24,13 @@ export function getFavoriteList()
 {
     return request.post(`/favorite/list`)
 }
+//历史列表
+export function getHistoryList()
+{
+    return request.get(`/history/list`)
+}
+//删除历史
+export function removeHistory()
+{
+    return request.delete(`/history/delete/${id}`)
+}

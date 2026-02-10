@@ -2,7 +2,7 @@
     <div class="Favorite-List">
         <h2>我的收藏</h2>
         <News
-        v-for="items in f-list"
+        v-for="items in favoritelist"
         :key="items.id"
         :news="items"
         />

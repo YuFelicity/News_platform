@@ -70,18 +70,14 @@ const router=createRouter({
           path: 'history',
           component: History,
           meta: { keepAlive: true }
-        },
+        }]
      
-        
+    },
         {
             path:'/notfound',
             component:NotFound
-        }]}
+        }
     ]
-
-   
-                
-
 })
 //全局前置路由守卫，用于检查是否登录过
 router.beforeEach(
