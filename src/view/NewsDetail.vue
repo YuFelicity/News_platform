@@ -15,7 +15,7 @@ const route=useRoute()//创建获取路由信息的对象
 const router=useRouter()//创建控制路由的对象
 const detail=ref({})
 const loadDetail= async()=>{
-    const id=route.params.id//从路由中获取id
+    const id=route.params.id//从路由中获取id 
     const content= await getNewsDetail(id)//根据id获取内容对象
     detail.value=content.data
 

@@ -45,7 +45,9 @@ const validateConfirmPassword=(rule,value,callback)=>{//自定义去确认密码
 }
 const rules={
     username:[{required:true,message:'请输入账号',trigger:'blur'}],
-    password:[{required:true,message:'请输入密码',trigger:'blur'}],
+    password:[{required:true,message:'请输入密码',trigger:'blur'},
+        {min:6,max:20,message:'密码应在6到20位之间',trigger:'blur'}
+    ],
     confirmpassword:[{required:true,message:"请确认密码",trigger:blur},{
         validator:validateConfirmPassword ,trigger:blur
     }]
