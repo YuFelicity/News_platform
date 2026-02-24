@@ -4,7 +4,7 @@ import router from '@/router'
 
 const service =axios.create(
     {
-        baseURL: import.meta.env.VITE_BASE_API,//设置基础路径,使得之后不需要大量写,import.meta是vite提供的基础元信息，env是环境变量
+        baseURL:"http://localhost:8000",//设置基础路径,使得之后不需要大量写,import.meta是vite提供的基础元信息，env是环境变量
         timeout:10000//设置请求超时时间为10秒
     }
 )
