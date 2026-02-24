@@ -1,19 +1,18 @@
 import {createRouter,createWebHistory} from 'vue-router'//导入vue-router中的api,前者用于创建路由实例，后者用于开启“HTML5 History 模式”的路由
 import {useUserStore} from '@/store/userStore'//导入pinia状态管理库，用于鉴定登录，使用useUserStore可以获取仓库实例
 import { KeepAlive } from 'vue'
-// src/router/index.js
-import NotFound from '@/view/NotFound.vue'
+
 
 //懒加载，用来减少每次加载页面都要重新导入的开销，只在真正使用的时候加载js代码
-const Login=()=>import('@/view/login/index.vue')
-const Register=()=>import('@/view/register/index.vue')
-const Home = () => import('@/view/Home/index.vue')
-const NewsDetail = () => import('@/view/NewsDetail/index.vue')
-const UserCenter = () => import('@/view/UserCenter/index.vue')
-const Profile = () => import('@/view/UserCenter/Profile/index.vue')
-const Favorite = () => import('@/view/UserCenter/Favorite/index.vue')
-const History = () => import('@/view/UserCenter/History/index.vue')
-const NotFound = () => import('@/view/NotFound/index.vue')
+const Login=()=>import('@/view/Login.vue')
+const Register=()=>import('@/view/Register.vue')
+const Home = () => import('@/view/Home.vue')
+const NewsDetail = () => import('@/view/NewsDetail.vue')
+const UserCenter = () => import('@/view/UserCenter.vue')
+const Profile = () => import('@/view/Profile.vue')
+const Favorite = () => import('@/view/Favorite.vue')
+const History = () => import('@/view/History.vue')
+const NotFound = () => import('@/view/NotFound.vue')
 //创建路由实例
 const router=createRouter({
     history:createWebHistory(),

@@ -1,12 +1,5 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
 
+<!-- src/App.vue -->
 <template>
-  <div id="app">
-   
-  </div>
-  
+  <router-view />
 </template>
-
-

@@ -1,6 +1,6 @@
 <template>
     <div class='home'>
-      <el-menu mode="horizontal" :default-active="activeCategory">//设置导航栏模式为横向,动态绑定激活的菜单项
+      <el-menu mode="horizontal" :default-active="activeCategory"><!--//设置导航栏模式为横向,动态绑定激活的菜单项-->
         <!--使用v-for渲染导航栏,再点击的时候调用函数-->
         <el-menu-item 
         v-for="item in categories" 
@@ -22,8 +22,8 @@
        v-model:current-page="page"
        v-model:page-size="pageSize"
       :total="total"
-      @current-change="loadlist"
-      @size-change="loadlist"
+      @current-change="loadList"
+      @size-change="loadList"
       />
 
       
@@ -69,7 +69,63 @@ onMounted(() => {
   loadCategory()
   loadList()
 })
-
-
-
 </script>
+<style scoped>
+.home {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 导航栏样式优化 */
+.home .el-menu {
+  margin-bottom: 30px;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 0 20px;
+}
+
+.home .el-menu-item {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  height: 56px;
+  line-height: 56px;
+}
+
+.home .el-menu-item.is-active {
+  color: #409eff !important; /* Element Plus 主色 */
+  border-bottom: 2px solid #409eff !important;
+}
+
+/* 新闻列表容器 */
+.news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 分页居中 */
+.home .el-pagination {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+/* 响应式：小屏幕下导航栏紧凑 */
+@media (max-width: 768px) {
+  .home {
+    padding: 15px;
+  }
+
+  .home .el-menu {
+    padding: 0 10px;
+  }
+
+  .home .el-menu-item {
+    font-size: 14px;
+    padding: 0 10px !important;
+  }
+}
+</style>
