@@ -1,82 +1,167 @@
 <template>
-    <div class="register">
-        <el-card>
-            <h2>用户注册</h2>
-            <el-form :model="form" :rules="rules" ref="formRef" label-width="80px">
-                <el-form-items label="账号" prop="username">
-                    <el-input v-model="form.username" placeholder="请输入账号"/>
-                </el-form-items>
-                 <el-form-items label="密码" prop="password">
-                    <el-input v-model="form.password" placeholder="请输入密码"/>
-                </el-form-items>
-                 <el-form-items label="确认密码" prop="confirmpassword">
-                    <el-input v-model="form.confirmpassword" placeholder="请确认密码"/>
-
-                </el-form-items>
-                 <el-form-items>
-                    <el-button type="primary" @click="onSubmit">注册</el-button>
-                    <el-button type="primary" @click="goLogin">去登陆</el-button>
-                </el-form-items>
-            </el-form>
-        </el-card>
-
+  <div class="register-container">
+    <div class="register-box">
+      <h2>注册</h2>
+      
+      <el-form
+        :model="form"
+        @submit.prevent="handleRegister"
+        class="register-form"
+      >
+        <el-form-item label="用户名">
+          <el-input
+            v-model="form.username"
+            placeholder="6-20位，支持字母、数字、下划线"
+            clearable
+          />
+        </el-form-item>
+        
+        <el-form-item label="密码">
+          <el-input
+            v-model="form.password"
+            type="password"
+            placeholder="8-20位，包含字母和数字"
+            clearable
+          />
+        </el-form-item>
+        
+        <el-form-item label="确认密码">
+          <el-input
+            v-model="form.confirmPassword"
+            type="password"
+            placeholder="再次输入密码"
+            clearable
+            @keyup.enter="handleRegister"
+          />
+        </el-form-item>
+        
+        <el-form-item>
+          <el-button
+            type="primary"
+            @click="handleRegister"
+            :loading="loading"
+            class="register-btn"
+          >
+            注册
+          </el-button>
+        </el-form-item>
+        
+        <div class="form-footer">
+          <p>已有账号？<router-link to="/login">点击登录</router-link></p>
+        </div>
+      </el-form>
     </div>
+  </div>
 </template>
+
 <script setup>
-import {ref } from 'vue'
-import {ElMessage} from 'element-plus'
-import {useRouter} from'vue-router'
-import {register} from'@/api/user'
-const form=ref({
-    username:'',
-    password:'',
-    confirmpassword:''
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { register } from '@/api/user'
+import { useUserStore } from '@/stores/userStore'
+
+const router = useRouter()
+const userStore = useUserStore()
+const form = ref({
+  username: '',
+  password: '',
+  confirmPassword: ''
 })
+const loading = ref(false)
 
-const router=useRouter()
-const validateConfirmPassword=(rule,value,callback)=>{//自定义去确认密码
-    if(value!==form.value.password)
-    {
-        callback(new error('两次输入密码不一致'))//callback()如果括号内为空说明检验成功，括号内有错误说明检验失败
-    }
-    else{
-        callback()
-    }
+const handleRegister = async () => {
+  // 验证
+  if (!form.value.username || !form.value.password || !form.value.confirmPassword) {
+    ElMessage.error('请填写所有字段')
+    return
+  }
+  
+  if (form.value.password !== form.value.confirmPassword) {
+    ElMessage.error('两次输入的密码不一致')
+    return
+  }
+  
+  if (form.value.username.length < 6 || form.value.username.length > 20) {
+    ElMessage.error('用户名长度需6-20位')
+    return
+  }
+  
+  if (form.value.password.length < 8 || form.value.password.length > 20) {
+    ElMessage.error('密码长度需8-20位')
+    return
+  }
+  
+  loading.value = true
+  try {
+    const response = await register(form.value.username, form.value.password)
+    
+    // 注册成功后自动登录
+    userStore.setTokenValue(response.data.token)
+    userStore.setUser({
+      username: form.value.username,
+      id: response.data.userId
+    })
+    
+    ElMessage.success('注册成功，已自动登录')
+    router.push('/')
+  } catch (error) {
+    ElMessage.error('注册失败，用户名可能已存在')
+  } finally {
+    loading.value = false
+  }
 }
-const rules={
-    username:[{required:true,message:'请输入账号',trigger:'blur'}],
-    password:[{required:true,message:'请输入密码',trigger:'blur'},
-        {min:6,max:20,message:'密码应在6到20位之间',trigger:'blur'}
-    ],
-    confirmpassword:[{required:true,message:"请确认密码",trigger:'blur'},{
-        validator:validateConfirmPassword ,trigger:'blur'
-    }]
-}
-const formRef=ref(null)
-const onSubmit=async()=>{
-    await formRef.value.validate()
-     await register({
-    username: form.value.username,
-    password: form.value.password
-  })
-
-  ElMessage.success('注册成功，请登录')
-
-  router.push('/login')
-}
-const goLogin = () => {
-  router.push('/login')
-}
- 
 </script>
-<style scoped>
-.register {
+
+<style scoped lang="scss">
+.register-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
-.register-card {
-  width: 400px;
+
+.register-box {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #333;
+  }
+}
+
+.register-form {
+  .register-btn {
+    width: 100%;
+  }
+}
+
+.form-footer {
+  text-align: center;
+  font-size: 14px;
+  
+  p {
+    margin: 0;
+  }
+  
+  a {
+    color: #0084ff;
+  }
+}
+
+@media (max-width: 600px) {
+  .register-box {
+    width: 90%;
+    padding: 20px;
+    max-width: 100%;
+  }
 }
 </style>
