@@ -1,7 +1,7 @@
-import request from '@utils/request'//导入axios
+import request from '@/utils/request'//导入axios
 //新闻分类
 export function getCategoryList(){
-    return request.get(`/news/category/list`)//与基础路径产生关联
+    return request.get(`/news/categories/list`)//与基础路径产生关联
 }
 //新闻列表
 export function getNewsList(params){
@@ -17,7 +17,7 @@ export function addFavorite(id) {
 }
 // 取消收藏
 export function cancelFavorite(id) {
-  return request.delete(`/favorite/cancel/${id}`)
+  return request.delete(`/favorite/remove/${id}`)
 }
 //收藏列表
 export function getFavoriteList()
