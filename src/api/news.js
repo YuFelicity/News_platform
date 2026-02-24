@@ -1,36 +1,40 @@
-import request from '@/utils/request'//导入axios
-//新闻分类
-export function getCategoryList(){
-    return request.get(`/news/categories/list`)//与基础路径产生关联
+import request from '@/utils/request'
+
+// 获取新闻分类
+export function getCategories() {
+  return request.get('/news/categories')
 }
-//新闻列表
-export function getNewsList(params){
-    return request.get(`/news/list`,params)
-}//params是传给后端的查询参数，将参数拼接到查询字符串上
-//新闻详情
-export function getNewsDetail(id){
-    return request.get(`news/detail/${id}`)
+
+// 获取新闻列表
+export function getNewsList(category, page = 1, pageSize = 10) {
+  return request.get('/news/list', {
+    params: { category, page, pageSize }
+  })
 }
-//添加收藏
-export function addFavorite(id) {
-  return request.post(`/favorite/add/${id}`)
+
+// 获取新闻详情
+export function getNewsDetail(newsId) {
+  return request.get(`/news/${newsId}`)
 }
-// 取消收藏
-export function cancelFavorite(id) {
-  return request.delete(`/favorite/remove/${id}`)
+
+// 添加浏览记录
+export function addHistory(newsId) {
+  return request.post('/history/add', { newsId })
 }
-//收藏列表
-export function getFavoriteList()
-{
-    return request.post(`/favorite/list`)
+
+// 获取浏览历史
+export function getHistory(page = 1, pageSize = 10) {
+  return request.get('/history/list', {
+    params: { page, pageSize }
+  })
 }
-//历史列表
-export function getHistoryList()
-{
-    return request.get(`/history/list`)
+
+// 删除单条历史
+export function deleteHistory(historyId) {
+  return request.delete(`/history/${historyId}`)
 }
-//删除历史
-export function removeHistory()
-{
-    return request.delete(`/history/delete/${id}`)
+
+// 清空历史
+export function clearHistory() {
+  return request.delete('/history/clear')
 }

@@ -1,22 +1,26 @@
-import request from'@/utils.request'
-import { id } from 'element-plus/es/locale/index.mjs'
-export function login(data)
-{
-    return request.post(`/user/login`,data)
-}
-export function register(data){
-    return request.post(`/user/register`,data)
-}
-export function getUserInfo()
-{
-    return request.get(`/user/info`)
-}
-export function updateUser(data)
-{
-    return request.put(`/user/update`,data)
+import request from '@/utils/request'
 
+// 用户注册
+export function register(username, password) {
+  return request.post('/auth/register', { username, password })
 }
-export function updatePassword(data)
-{
-    return request.put(`/user/password`,data)
+
+// 用户登录
+export function login(username, password) {
+  return request.post('/auth/login', { username, password })
+}
+
+// 获取用户信息
+export function getUserInfo() {
+  return request.get('/users/info')
+}
+
+// 更新用户信息
+export function updateUserInfo(data) {
+  return request.put('/users/info', data)
+}
+
+// 修改密码
+export function changePassword(oldPassword, newPassword) {
+  return request.post('/users/password', { oldPassword, newPassword })
 }

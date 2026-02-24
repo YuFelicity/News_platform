@@ -1,13 +1,13 @@
 <template>
-  <div class="history">
+  <div class="favorites">
     <div class="header">
-      <h2>浏览历史</h2>
+      <h2>我的收藏</h2>
       <el-button
         type="danger"
         @click="handleClearAll"
-        v-if="historyList.length > 0"
+        v-if="lrNewsList.length > 0"
       >
-        清空历史
+        清空所有收藏
       </el-button>
     </div>
     
@@ -16,33 +16,33 @@
       加载中...
     </div>
     
-    <div v-else-if="historyList.length > 0" class="news-items">
+    <div v-else-if="favoriteList.length > 0" class="news-items">
       <div
-        v-for="record in historyList"
-        :key="record.id"
+        v-for="news in favoriteList"
+        :key="news.id"
         class="news-card"
       >
         <div class="card-header">
-          <h3 @click="goToNews(record.newsId)" class="clickable">{{ record.title }}</h3>
+          <h3 @click="goToNews(news.id)" class="clickable">{{ news.title }}</h3>
           <el-button
             size="small"
             type="danger"
             text
-            @click="handleDeleteRecord(record.id)"
+            @click="handleRemoveFavorite(news.id)"
           >
-            删除
+            移除
           </el-button>
         </div>
-        <p class="news-summary">{{ truncateText(record.summary, 100) }}</p>
+        <p class="news-summary">{{ truncateText(news.summary, 100) }}</p>
         <div class="card-footer">
-          <span class="text-muted">浏览于: {{ formatTime(record.viewTime) }}</span>
+          <span class="text-muted">{{ formatTime(news.collectedTime) }}</span>
         </div>
       </div>
     </div>
     
     <div v-else class="empty-state">
-      <div class="empty-icon">📋</div>
-      <p>暂无浏览历史</p>
+      <div class="empty-icon">⭐</div>
+      <p>暂无收藏记录，快去收藏喜欢的新闻吧</p>
     </div>
     
     <el-pagination
@@ -62,21 +62,21 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getHistory, deleteHistory, clearHistory } from '@/api/news'
+import { getFavoriteList, removeFavorite, clearFavorites } from '@/api/favorite'
 import { formatTime, truncateText } from '@/utils/format'
 
 const router = useRouter()
-const historyList = ref([])
+const favoriteList = ref([])
 const loading = ref(false)
 const currentPage = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
 
-const loadHistory = async () => {
+const loadFavorites = async () => {
   loading.value = true
   try {
-    const response = await getHistory(currentPage.value, pageSize.value)
-    historyList.value = response.data || []
+    const response = await getFavoriteList(currentPage.value, pageSize.value)
+    favoriteList.value = response.data || []
     total.value = response.total || 0
   } catch (error) {
     // 错误已处理
@@ -87,24 +87,24 @@ const loadHistory = async () => {
 
 const handlePageChange = (page) => {
   currentPage.value = page
-  loadHistory()
+  loadFavorites()
 }
 
 const handlePageSizeChange = (size) => {
   pageSize.value = size
   currentPage.value = 1
-  loadHistory()
+  loadFavorites()
 }
 
 const goToNews = (newsId) => {
   router.push(`/news/${newsId}`)
 }
 
-const handleDeleteRecord = async (recordId) => {
+const handleRemoveFavorite = async (newsId) => {
   try {
-    await deleteHistory(recordId)
-    ElMessage.success('已删除')
-    loadHistory()
+    await removeFavorite(newsId)
+    ElMessage.success('已移除收藏')
+    loadFavorites()
   } catch (error) {
     // 错误已处理
   }
@@ -112,7 +112,7 @@ const handleDeleteRecord = async (recordId) => {
 
 const handleClearAll = () => {
   ElMessageBox.confirm(
-    '确定要清空所有浏览历史吗？操作无法撤销。',
+    '确定要清空所有收藏吗？操作无法撤销。',
     '提示',
     {
       confirmButtonText: '确定',
@@ -121,10 +121,10 @@ const handleClearAll = () => {
     }
   ).then(async () => {
     try {
-      await clearHistory()
-      ElMessage.success('已清空')
+      await clearFavorites()
+      ElMessage.success('已清空所有收藏')
       currentPage.value = 1
-      loadHistory()
+      loadFavorites()
     } catch (error) {
       // 错误已处理
     }
@@ -134,12 +134,12 @@ const handleClearAll = () => {
 }
 
 onMounted(() => {
-  loadHistory()
+  loadFavorites()
 })
 </script>
 
 <style scoped lang="scss">
-.history {
+.favorites {
   h2 {
     margin-bottom: 16px;
     font-size: 18px;

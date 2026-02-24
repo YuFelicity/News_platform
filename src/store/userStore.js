@@ -1,26 +1,38 @@
-import {defineStore} from 'pinia'//创建仓库
-import {ref} from 'vue'
-export const useUserStore=defineStore('user',()=>{
-    const token=ref(localStorage.getItem('token'||''))//登录token
-    const userInfo = ref(null)//用户信息
-    const isLogin=!!localStorage.getItem('token')//判断是否登录
-    const setToken = (newToken) => {
-     localStorage.setItem('token', newToken)//设置token
-     }
-     const setUserInfo = (info) => {
-    userInfo.value = info
-     }//设置用户信息
-     const logout = () => {
-  token.value = ''
-  userInfo.value = null
-  localStorage.removeItem('token')
-}//退出登录
-return {
-  token,
-  userInfo,
-  isLogin,
-  setToken,
-  setUserInfo,
-  logout
-}
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
+import { setToken, removeToken, getToken } from '@/utils/auth'
+
+export const useUserStore = defineStore('user', () => {
+  const user = ref(null)
+  const token = ref(getToken())
+  const isLoggedIn = ref(!!token.value)
+
+  // 设置用户信息
+  function setUser(userData) {
+    user.value = userData
+  }
+
+  // 设置令牌
+  function setTokenValue(newToken) {
+    token.value = newToken
+    setToken(newToken)
+    isLoggedIn.value = true
+  }
+
+  // 清除用户信息
+  function clearUser() {
+    user.value = null
+    token.value = null
+    isLoggedIn.value = false
+    removeToken()
+  }
+
+  return {
+    user,
+    token,
+    isLoggedIn,
+    setUser,
+    setTokenValue,
+    clearUser
+  }
 })
