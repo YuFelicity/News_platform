@@ -8,39 +8,30 @@
     
     <!-- 新闻详情 -->
     <div v-else-if="news" class="news-detail">
+      
       <div class="news-title">{{ news.title }}</div>
       
       <div class="news-meta">
         <span>作者: {{ news.author }}</span>
-        <span>分类: {{ news.category }}</span>
-        <span>{{ formatTime(news.publishTime) }}</span>
         <span>浏览: {{ news.views }}</span>
       </div>
       
       <div class="action-buttons">
         <el-button
           :type="isFavorite ? 'danger' : 'default'"
-          @click="handleFavorite"
-        >
+          @click="handleFavorite">
           {{ isFavorite ? '已收藏' : '收藏' }}
         </el-button>
       </div>
-      
-      <div class="news-content" v-html="news.content"></div>
-      
-      <!-- 相关新闻 -->
-      <div v-if="relatedNews.length > 0" class="related-news">
-        <h3>相关新闻</h3>
-        <div class="related-list">
-          <div
-            v-for="item in relatedNews"
-            :key="item.id"
-            class="related-item"
-            @click="goToNews(item.id)"
-          >
-            <p>{{ truncateText(item.title, 50) }}</p>
-          </div>
+
+      <div class="news-body">
+        <!-- 左侧：新闻图片 -->
+        <div class="news-image-side" v-if="news.image">
+          <img :src="news.image" :alt="news.title" />
         </div>
+
+        <!-- 右侧：新闻内容（富文本） -->
+        <div class="news-content-side" v-html="news.content"></div>
       </div>
     </div>
     
@@ -186,62 +177,62 @@ onMounted(() => {
   gap: 12px;
 }
 
-.news-content {
+/* 核心：左右布局容器 */
+.news-body {
+  display: flex;
+  gap: 24px; /* 图和文之间的间距 */
+  align-items: flex-start; /* 顶部对齐 */
+}
+
+/* 左侧：图片区 */
+.news-image-side {
+  flex: 0 0 360px; /* 固定宽度，不拉伸 */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.news-image-side img {
+  width: 100%;
+  height: auto;
+  object-fit: cover; /* 保持比例，不拉伸 */
+}
+
+
+.news-content-side {
+  flex: 1; /* 占满剩余空间 */
   font-size: 16px;
   line-height: 1.8;
   color: #333;
-  margin-bottom: 32px;
-  
+
+  /* 内容内部样式保持不变 */
   img {
     max-width: 100%;
     height: auto;
     margin: 16px 0;
     border-radius: 4px;
   }
-  
+
   p {
     margin-bottom: 16px;
   }
-  
+
   h2, h3 {
     margin: 24px 0 16px 0;
     font-weight: bold;
   }
 }
 
-.related-news {
-  margin-top: 32px;
-  padding-top: 32px;
-  border-top: 1px solid #eee;
-  
-  h3 {
-    margin-bottom: 16px;
-    font-size: 18px;
-  }
+/* 适配：无图时，内容占满整行 */
+.news-detail:not(:has(.news-image-side)) .news-content-side {
+  flex: 1 1 100%;
 }
 
-.related-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.related-item {
-  padding: 12px;
-  background: #f9f9f9;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s;
-  
-  &:hover {
-    background: #f0f0f0;
-    color: #0084ff;
-  }
-  
-  p {
-    margin: 0;
-    font-size: 14px;
-  }
+.news-cover {
+  width: 100%;
+  max-height: 400px;
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 24px;
 }
 
 .empty-state {

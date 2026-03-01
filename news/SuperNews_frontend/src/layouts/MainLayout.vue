@@ -9,10 +9,10 @@
         
         <nav class="nav-menu">
           <ul class="categories">
-            <li v-for="cat in categories" :key="cat"
+            <li v-for="cat in categories" :key="cat.id"
                 :class="{ active: cat === newsStore.currentCategory }"
                 @click="changeCategory(cat)">
-              {{ cat }}
+              {{ cat.name }}
             </li>
           </ul>
         </nav>
@@ -25,9 +25,9 @@
             @keyup.enter="handleSearch"
           />
           
-          <div class="user-menu" v-if="userStore.isLoggedIn">
+          <div class="user-menu" v-if="userStore.isLoggedIn" style="min-width: 100px; display: inline-block;">
             <el-dropdown>
-              <span class="user-name">{{ userStore.user?.username }}</span>
+              <span class="user-name">{{ userStore.user?.username || '我的账号'}}</span>
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item @click="goToUserCenter">个人中心</el-dropdown-item>
@@ -52,7 +52,7 @@
     
     <!-- 底部 -->
     <footer class="footer">
-      <p>&copy; 2024 SuperNews - 超级新闻系统. All Rights Reserved.</p>
+      <p>&copy; 2026 SuperNews - 超级新闻系统. All Rights Reserved.</p>
     </footer>
   </div>
 </template>
