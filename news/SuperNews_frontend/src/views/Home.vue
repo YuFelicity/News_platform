@@ -1,11 +1,11 @@
 <template>
   <div class="home-container">
     <div class="news-list">
-      <h2>{{ newsStore.currentCategory }} 新闻</h2>
+      <h2>{{ newsStore.currentCategory?.name }} 新闻</h2>
       
       <!-- 加载中 -->
       <div v-if="loading" class="loading">
-        <el-spinning />
+        <el-skeleton :rows="5" animated />
       </div>
       
       <!-- 新闻列表 -->
@@ -14,17 +14,21 @@
           v-for="news in newsList"
           :key="news.id"
           class="news-card"
-          @click="goToDetail(news.id)"
-        >
+          @click="goToDetail(news.id)">
+
           <div class="news-header">
             <h3>{{ news.title }}</h3>
-            <span v-if="isFavorite(news.id)" class="favorite-badge">已收藏</span>
           </div>
-          <p class="news-summary">{{ truncateText(news.summary, 100) }}</p>
+
+          <div class="news-image" v-if="news.image">
+          <img :src="news.image" :alt="news.title" />
+          </div>
+
+          <p class="news-summary">{{ truncateText(news.description, 100) }}</p>
+
           <div class="news-footer">
             <span class="news-meta">
               <span>{{ news.author }} | </span>
-              <span>{{ formatTime(news.publishTime) }} | </span>
               <span>{{ news.views }} 浏览</span>
             </span>
             <el-tag size="small">{{ news.category }}</el-tag>
@@ -77,25 +81,14 @@ const loadNews = async () => {
   loading.value = true
   try {
     const response = await getNewsList(
-      newsStore.currentCategory,
+      newsStore.currentCategory?.id,
       currentPage.value,
       pageSize.value
     )
     
-    newsList.value = response.data || []
-    total.value = response.total || 0
+    newsList.value = response.data?.list || []
+    total.value = response.total?.to || 0
     
-    // 检查收藏状态
-    for (const news of newsList.value) {
-      try {
-        const fav = await checkFavorite(news.id)
-        if (fav.data.isFavorite) {
-          favoriteIds.value.add(news.id)
-        }
-      } catch (error) {
-        // 忽略错误，不中断流程
-      }
-    }
   } catch (error) {
     // 错误已在请求拦截器处理
   } finally {
@@ -134,9 +127,12 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+
 .home-container {
   width: 100%;
-  max-width: 800px;
+  max-width: 1200px;
+  margin: 0 auto; /* 让整个内容区在页面中居中 */
+  padding: 0 20px; /* 防止贴边 */
 }
 
 .news-list {
@@ -150,23 +146,34 @@ onMounted(() => {
 }
 
 .news-items {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  /* 新增：限制最大宽度，并水平居中 */
+  max-width: 900px; /* 这个宽度可以根据你的视觉效果微调 */
+  margin: 0 auto 30px; /* 上下间距，左右自动居中 */
 }
 
 .news-card {
+  /* 核心：设置宽高比 1:1，实现正方形 */
+  aspect-ratio: 1 / 1;
+  /* 内部垂直布局 */
+  display: flex;
+  flex-direction: column;
+  /* 美化 */
   background: white;
-  padding: 16px;
-  border-radius: 4px;
+  padding: 12px;
+  border-radius: 8px; /* 卡片整体圆角 */
   border: 1px solid #eee;
   cursor: pointer;
   transition: all 0.3s;
-  
-  &:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
-  }
+  /* 隐藏超出正方形的内容 */
+  overflow: hidden;
+}
+
+.news-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .news-header {
@@ -185,13 +192,21 @@ onMounted(() => {
   }
 }
 
-.favorite-badge {
-  background: #fef0f0;
-  color: #f56c6c;
-  padding: 2px 8px;
-  border-radius: 3px;
-  font-size: 12px;
-  white-space: nowrap;
+
+/* 图片容器：在正方形卡片中间，圆角，不遮挡文字 */
+.news-image {
+  width: 100%;
+  height: 40%; /* 占卡片高度的40%，留出空间给文字 */
+  border-radius: 6px; /* 图片圆角，更美观 */
+  overflow: hidden;   /* 让圆角生效 */
+  margin-bottom: 8px; /* 和下面的描述文字保持间距 */
+}
+
+/* 图片本身：填充容器，保持比例不变形 */
+.news-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 核心：按比例裁剪，不会拉伸变形 */
 }
 
 .news-summary {
