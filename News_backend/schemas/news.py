@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import BaseModel, Field, ConfigDict
 
 
-class NewsDetailResponseBase(BaseModel):
+class NewsItemBase(BaseModel):
     id: int
     title: str
     description: Optional[str] = None
@@ -20,9 +20,30 @@ class NewsDetailResponseBase(BaseModel):
     )
 
 class NewsListResponse(BaseModel):
-    list: list[NewsDetailResponseBase]
+    list: list[NewsItemBase]
     total: int
     has_more: bool = Field(False, alias="hasMore")
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        populate_by_name=True
+    )
+
+class NewsDetailResponse(NewsItemBase ):
+    related_news: list[NewsItemBase] = Field(None, alias="relatedNews")
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        populate_by_name=True
+    )
+
+class NewsCreateRequest(BaseModel):
+    title: str
+    description: Optional[str]
+    content: Optional[str]
+    image: Optional[str] = None
+    author: str
+    category_id: int = Field(..., alias="categoryId")
 
     model_config = ConfigDict(
         from_attributes=True,

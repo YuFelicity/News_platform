@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field, ConfigDict
 
-from schemas.news import NewsDetailResponseBase
+from schemas.news import NewsItemBase
 
 
 class FavoriteCheckResponse(BaseModel):
@@ -11,7 +11,7 @@ class FavoriteCheckResponse(BaseModel):
 class FavoriteAddResponse(BaseModel):
     news_id: int = Field(..., alias="newsId")
 
-class FavoriteNewsItemBase(NewsDetailResponseBase):
+class FavoriteNewsItemBase(NewsItemBase):
     favorite_id: int = Field(..., alias="favoriteId")
     favorite_time: datetime = Field(..., alias="favoriteTime")
 

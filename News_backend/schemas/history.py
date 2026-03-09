@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field, ConfigDict
 
-from schemas.news import NewsDetailResponseBase
+from schemas.news import NewsItemBase
 
 
 class HistoryAddRequest(BaseModel):
@@ -18,7 +18,7 @@ class HistoryAddResponse(BaseModel):
         populate_by_name=True # alias / 字段名兼容
     )
 
-class HistoryNewsItemBase(NewsDetailResponseBase):
+class HistoryNewsItemBase(NewsItemBase):
     view_time: datetime = Field(..., alias="viewTime")
 
 class HistoryListResponse(BaseModel):

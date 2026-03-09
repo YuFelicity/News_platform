@@ -11,6 +11,7 @@ class UserInfoBase(BaseModel):
     avatar: Optional[str] = Field(None, max_length=255, description="头像URL")
     gender: Optional[str] = Field(None, description="性别")
     bio: Optional[str] = Field(None, max_length=500, description="个人简介")
+    phone: Optional[str] = Field(None, max_length=11, description="手机号")
 
 class UserInfoResponse(UserInfoBase):
     id: int

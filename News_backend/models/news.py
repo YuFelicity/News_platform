@@ -42,3 +42,4 @@ class News(Base):
     category_id: Mapped[int] = mapped_column(Integer, ForeignKey("news_category.id"), nullable=False, comment="新闻分类ID")
     views: Mapped[int] = mapped_column(Integer, default=0, nullable=False, comment="浏览量")
     publish_time: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(), nullable=False, comment="发布时间")
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=True, comment="用户ID")
